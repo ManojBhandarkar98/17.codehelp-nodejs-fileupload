@@ -29,10 +29,10 @@ function isFileTypeSupported(type, supportedTypes) {
     return supportedTypes.includes(type);
 }
 
-async function uploadFileToCloudinary(file,folder) {
-    const options = {folder};
-    console.log('temp file path',file.tempFilePath);
-    return await cloudinary.uploader.upload(file.tempFilePath, options)
+async function uploadFileToCloudinary(file, folder) {
+    const options = { folder };
+    console.log('temp file path', file.tempFilePath);
+    return await cloudinary.uploader.upload(file.tempFilePath, options);
 }
 
 //image upload handler
@@ -48,22 +48,22 @@ exports.imageUpload = async (req, res) => {
         //validation
         const supportedTypes = ["jpg", "jpeg", "png"];
         //current file type extract extension
-        const fileType = file.name.split('.'[1]).toLowerCase();
+        const fileType = file.name.split('.')[1].toLowerCase();
         //if file format not support
-        if (!isFileTypeSupported(type, supportedTypes)){
+        if (!isFileTypeSupported(fileType, supportedTypes)) {
             return res.status(400).json({
-                success:false,
-                message:'File format not supported'
+                success: false,
+                message: 'File format not supported'
             })
         }
         //if file format supported
         console.log("Uploading to codehelp folder in cloudinary");
         const response = await uploadFileToCloudinary(file, "Codehelp");
-        console.log(response);
+        console.log("response", response);
 
         res.json({
-            sucess:true,
-            imageUrl:response.secure_url,
+            sucess: true,
+            imageUrl: response.secure_url,
             message: 'Image Successfully uploaded'
         })
 
