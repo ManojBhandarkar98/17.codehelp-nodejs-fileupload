@@ -1,3 +1,4 @@
+const { cloudinaryConnect } = require("../config/cloudinary");
 const File = require("../models/File");
 
 //localFileUpload -> handler function
@@ -27,6 +28,13 @@ exports.localFileUpload = async (req, res) => {
 function isFileTypeSupported(type, supportedTypes) {
     return supportedTypes.includes(type);
 }
+
+async function uploadFileToCloudinary(file,folder) {
+    const options = {folder};
+    console.log('temp file path',file.tempFilePath);
+    return await cloudinary.uploader.upload(file.tempFilePath, options)
+}
+
 //image upload handler
 exports.imageUpload = async (req, res) => {
     try {
@@ -48,6 +56,16 @@ exports.imageUpload = async (req, res) => {
                 message:'File format not supported'
             })
         }
+        //if file format supported
+        console.log("Uploading to codehelp folder in cloudinary");
+        const response = await uploadFileToCloudinary(file, "Codehelp");
+        console.log(response);
+
+        res.json({
+            sucess:true,
+            imageUrl:response.secure_url,
+            message: 'Image Successfully uploaded'
+        })
 
     } catch (err) {
         res.status(400).json({
