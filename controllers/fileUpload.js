@@ -1,4 +1,4 @@
-const { cloudinaryConnect } = require("../config/cloudinary");
+const cloudinary = require("cloudinary").v2;
 const File = require("../models/File");
 
 //localFileUpload -> handler function
@@ -31,7 +31,7 @@ function isFileTypeSupported(type, supportedTypes) {
 
 async function uploadFileToCloudinary(file, folder) {
     const options = { folder };
-    console.log('temp file path', file.tempFilePath);
+    console.log("temp file path", file.tempFilePath);
     return await cloudinary.uploader.upload(file.tempFilePath, options);
 }
 
@@ -57,9 +57,17 @@ exports.imageUpload = async (req, res) => {
             })
         }
         //if file format supported
-        console.log("Uploading to codehelp folder in cloudinary");
+        console.log("Uploading to Codehelp");
         const response = await uploadFileToCloudinary(file, "Codehelp");
-        console.log("response", response);
+        console.log(response);
+
+        //insert into DB
+        const fileData = await File.create({
+            name,
+            tags,
+            email,
+            imageUrl: response.secure_url
+        })
 
         res.json({
             sucess: true,
