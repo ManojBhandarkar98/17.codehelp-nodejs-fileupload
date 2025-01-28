@@ -19,6 +19,30 @@ exports.localFileUpload = async (req, res) => {
             message: "Loacal file upload successfully"
         })
     } catch (err) {
-        console.log(err)
+        console.log(err);
+        console.log('Not able to upload the file on server')
+    }
+}
+
+//image upload handler
+exports.imageUpload = async (req, res) => {
+    try {
+        //data fetch
+        const { name, tags, email } = req.body;
+        console.log(name, tags, email);
+
+        const file = req.files.imageFile;
+        console.log(file);
+
+        //validation
+        const supportedTypes = ["jpg", "jpeg", "png"];
+        //current file type extract extension
+        const fileType = file.name.split('.'[1]).toLowerCase();
+
+    } catch (err) {
+        res.status(400).json({
+            success: false,
+            message: 'Something went wrong'
+        })
     }
 }
