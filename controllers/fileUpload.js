@@ -24,6 +24,9 @@ exports.localFileUpload = async (req, res) => {
     }
 }
 
+function isFileTypeSupported(type, supportedTypes) {
+    return supportedTypes.includes(type);
+}
 //image upload handler
 exports.imageUpload = async (req, res) => {
     try {
@@ -38,6 +41,13 @@ exports.imageUpload = async (req, res) => {
         const supportedTypes = ["jpg", "jpeg", "png"];
         //current file type extract extension
         const fileType = file.name.split('.'[1]).toLowerCase();
+        //if file format not support
+        if (!isFileTypeSupported(type, supportedTypes)){
+            return res.status(400).json({
+                success:false,
+                message:'File format not supported'
+            })
+        }
 
     } catch (err) {
         res.status(400).json({
